@@ -13,6 +13,7 @@ import { Route as SciencesRouteImport } from './routes/sciences'
 import { Route as MathsRouteImport } from './routes/maths'
 import { Route as FrancaisRouteImport } from './routes/francais'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AnglaisRouteImport } from './routes/anglais'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SciencesRoute = SciencesRouteImport.update({
@@ -35,6 +36,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnglaisRoute = AnglaisRouteImport.update({
+  id: '/anglais',
+  path: '/anglais',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anglais': typeof AnglaisRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anglais': typeof AnglaisRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anglais': typeof AnglaisRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
@@ -65,14 +74,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/francais' | '/maths' | '/sciences'
+  fullPaths:
+    | '/'
+    | '/anglais'
+    | '/dashboard'
+    | '/francais'
+    | '/maths'
+    | '/sciences'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/francais' | '/maths' | '/sciences'
-  id: '__root__' | '/' | '/dashboard' | '/francais' | '/maths' | '/sciences'
+  to: '/' | '/anglais' | '/dashboard' | '/francais' | '/maths' | '/sciences'
+  id:
+    | '__root__'
+    | '/'
+    | '/anglais'
+    | '/dashboard'
+    | '/francais'
+    | '/maths'
+    | '/sciences'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnglaisRoute: typeof AnglaisRoute
   DashboardRoute: typeof DashboardRoute
   FrancaisRoute: typeof FrancaisRoute
   MathsRoute: typeof MathsRoute
@@ -109,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anglais': {
+      id: '/anglais'
+      path: '/anglais'
+      fullPath: '/anglais'
+      preLoaderRoute: typeof AnglaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +151,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnglaisRoute: AnglaisRoute,
   DashboardRoute: DashboardRoute,
   FrancaisRoute: FrancaisRoute,
   MathsRoute: MathsRoute,
