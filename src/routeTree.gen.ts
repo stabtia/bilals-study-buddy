@@ -14,6 +14,7 @@ import { Route as ParentRouteImport } from './routes/parent'
 import { Route as MathsRouteImport } from './routes/maths'
 import { Route as FrancaisRouteImport } from './routes/francais'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CoachRouteImport } from './routes/coach'
 import { Route as AnglaisRouteImport } from './routes/anglais'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -42,6 +43,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnglaisRoute = AnglaisRouteImport.update({
   id: '/anglais',
   path: '/anglais',
@@ -56,6 +62,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anglais': typeof AnglaisRoute
+  '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anglais': typeof AnglaisRoute
+  '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/anglais': typeof AnglaisRoute
+  '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/anglais'
+    | '/coach'
     | '/dashboard'
     | '/francais'
     | '/maths'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/anglais'
+    | '/coach'
     | '/dashboard'
     | '/francais'
     | '/maths'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/anglais'
+    | '/coach'
     | '/dashboard'
     | '/francais'
     | '/maths'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnglaisRoute: typeof AnglaisRoute
+  CoachRoute: typeof CoachRoute
   DashboardRoute: typeof DashboardRoute
   FrancaisRoute: typeof FrancaisRoute
   MathsRoute: typeof MathsRoute
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/anglais': {
       id: '/anglais'
       path: '/anglais'
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnglaisRoute: AnglaisRoute,
+  CoachRoute: CoachRoute,
   DashboardRoute: DashboardRoute,
   FrancaisRoute: FrancaisRoute,
   MathsRoute: MathsRoute,
