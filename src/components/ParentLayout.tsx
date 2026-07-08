@@ -3,13 +3,14 @@ import { LayoutDashboard, Target, Bell, FileText, History, LogOut, ArrowLeft } f
 import type { ReactNode } from "react";
 import { parentAuth } from "@/lib/auth";
 
-const nav = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const nav: NavItem[] = [
   { to: "/parent", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
   { to: "/parent/objectifs", label: "Objectifs", icon: Target },
   { to: "/parent/historique", label: "Historique", icon: History },
   { to: "/parent/notifications", label: "Notifications", icon: Bell },
   { to: "/parent/rapport", label: "Rapport PDF", icon: FileText },
-] as const;
+];
 
 export function ParentLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
