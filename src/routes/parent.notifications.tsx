@@ -42,8 +42,16 @@ function Notifications() {
   );
 }
 
-function Toggle({ label, desc, value, onChange }: {
-  label: string; desc: string; value: boolean; onChange: (v: boolean) => void;
+function Toggle({
+  label,
+  desc,
+  value,
+  onChange,
+}: {
+  label: string;
+  desc: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
 }) {
   return (
     <div className="p-4 flex items-start gap-3">
@@ -56,8 +64,10 @@ function Toggle({ label, desc, value, onChange }: {
         className="w-11 h-6 rounded-full transition-colors relative"
         style={{ background: value ? "rgb(15 23 42)" : "rgb(203 213 225)" }}
       >
-        <span className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
-          style={{ left: value ? "22px" : "2px" }} />
+        <span
+          className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+          style={{ left: value ? "22px" : "2px" }}
+        />
       </button>
     </div>
   );

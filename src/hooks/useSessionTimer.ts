@@ -28,8 +28,12 @@ export function useSessionTimer(subject: Subject) {
   }, [subject]);
 
   return {
-    onCorrect: () => { correct.current++; },
-    onWrong: () => { wrong.current++; },
+    onCorrect: () => {
+      correct.current++;
+    },
+    onWrong: () => {
+      wrong.current++;
+    },
     flush: () => {
       if (logged.current) return;
       const durationSec = Math.round((Date.now() - started.current) / 1000);

@@ -22,8 +22,10 @@ function Francais() {
   const [done, setDone] = useState(false);
 
   const results = useMemo(
-    () => reading.questions.map((q, i) =>
-      answers[i]?.toLowerCase().trim().includes(q.a.toLowerCase().trim())),
+    () =>
+      reading.questions.map((q, i) =>
+        answers[i]?.toLowerCase().trim().includes(q.a.toLowerCase().trim()),
+      ),
     [answers, reading],
   );
 
@@ -33,7 +35,10 @@ function Francais() {
     reading.questions.forEach((_, i) => {
       const r = !!results[i];
       recordAnswer("francais", r);
-      if (r) { ok++; timer.onCorrect(); } else timer.onWrong();
+      if (r) {
+        ok++;
+        timer.onCorrect();
+      } else timer.onWrong();
     });
     recordSubjectSession("francais");
     awardXP(ok * 8);
@@ -44,8 +49,13 @@ function Francais() {
     setDone(true);
     const lc = writing.split(/\n/).filter((l) => l.trim().length > 0).length;
     const bonus = lc >= 5 ? 30 : 15;
-    celebrate({ title: "Lecture & écriture terminées !", xp: 30 + bonus, coins: 15, badge: "📖",
-      message: "Tu progresses en français, Bilal !" });
+    celebrate({
+      title: "Lecture & écriture terminées !",
+      xp: 30 + bonus,
+      coins: 15,
+      badge: "📖",
+      message: "Tu progresses en français, Bilal !",
+    });
   }
 
   function reset() {
@@ -63,7 +73,9 @@ function Francais() {
   return (
     <AppLayout>
       <header className="pt-2 pb-4">
-        <p className="text-sm font-semibold" style={{ color: "var(--francais)" }}>📖 Français</p>
+        <p className="text-sm font-semibold" style={{ color: "var(--francais)" }}>
+          📖 Français
+        </p>
         <h1 className="text-3xl font-bold">Lecture & écriture</h1>
       </header>
 
@@ -86,7 +98,10 @@ function Francais() {
                 disabled={checked}
               />
               {checked && (
-                <div className="mt-2 text-sm" style={{ color: results[i] ? "var(--success)" : "var(--destructive)" }}>
+                <div
+                  className="mt-2 text-sm"
+                  style={{ color: results[i] ? "var(--success)" : "var(--destructive)" }}
+                >
                   {results[i] ? "✅ Bien vu !" : `Réponse attendue : ${q.a}`}
                 </div>
               )}
@@ -94,7 +109,11 @@ function Francais() {
           ))}
         </div>
         {!checked ? (
-          <button onClick={submit} className="btn-big mt-4" style={{ background: "var(--francais)", color: "white" }}>
+          <button
+            onClick={submit}
+            className="btn-big mt-4"
+            style={{ background: "var(--francais)", color: "white" }}
+          >
             Vérifier mes réponses
           </button>
         ) : null}
@@ -116,21 +135,31 @@ function Francais() {
         </div>
 
         {!done ? (
-          <button onClick={finish} className="btn-big mt-3 inline-flex items-center gap-2"
-            style={{ background: "var(--primary)", color: "white" }}>
+          <button
+            onClick={finish}
+            className="btn-big mt-3 inline-flex items-center gap-2"
+            style={{ background: "var(--primary)", color: "white" }}
+          >
             <Check className="w-4 h-4" /> J'ai terminé
           </button>
         ) : (
           <div className="mt-4 card-soft p-4">
             <p className="font-bold">Bravo Bilal ! 🌟</p>
             <ul className="mt-2 text-sm space-y-1 list-disc pl-5">
-              {lc >= 5 ? <li>Tu as bien atteint 5 lignes, c'est parfait.</li>
-                : <li>Essaie d'atteindre 5 lignes la prochaine fois.</li>}
+              {lc >= 5 ? (
+                <li>Tu as bien atteint 5 lignes, c'est parfait.</li>
+              ) : (
+                <li>Essaie d'atteindre 5 lignes la prochaine fois.</li>
+              )}
               <li>Relis ton texte à voix basse pour repérer les fautes.</li>
               <li>Utilise une majuscule au début et un point à la fin.</li>
               <li>Aère ton texte : une idée = une phrase.</li>
             </ul>
-            <button onClick={reset} className="btn-big mt-4" style={{ background: "var(--francais)", color: "white" }}>
+            <button
+              onClick={reset}
+              className="btn-big mt-4"
+              style={{ background: "var(--francais)", color: "white" }}
+            >
               Nouvelle lecture
             </button>
           </div>

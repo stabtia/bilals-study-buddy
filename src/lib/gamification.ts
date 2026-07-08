@@ -2,7 +2,7 @@ import type { ProgressState } from "./data";
 
 export function xpForLevel(level: number): number {
   // Cumul XP nécessaire pour atteindre `level`
-  return 100 * level * (level - 1) / 2 + 100 * (level - 1);
+  return (100 * level * (level - 1)) / 2 + 100 * (level - 1);
 }
 
 export function levelFromXp(xp: number): number {
@@ -36,7 +36,9 @@ export function isoMonth(d: Date = new Date()): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
-export function recommendations(s: ProgressState): { title: string; body: string; tone: "info" | "warn" | "good" }[] {
+export function recommendations(
+  s: ProgressState,
+): { title: string; body: string; tone: "info" | "warn" | "good" }[] {
   const recs: { title: string; body: string; tone: "info" | "warn" | "good" }[] = [];
   const subjects = ["maths", "francais", "sciences", "anglais"] as const;
   for (const sub of subjects) {
@@ -72,10 +74,18 @@ export function recommendations(s: ProgressState): { title: string; body: string
       tone: "warn",
     });
   } else if (weekMinutes >= s.weeklyGoal.minutes) {
-    recs.push({ title: "Objectif hebdo atteint 🎉", body: "Continuer sur cette dynamique.", tone: "good" });
+    recs.push({
+      title: "Objectif hebdo atteint 🎉",
+      body: "Continuer sur cette dynamique.",
+      tone: "good",
+    });
   }
   if (recs.length === 0) {
-    recs.push({ title: "Continuer comme ça", body: "Rien à signaler, la routine tient.", tone: "info" });
+    recs.push({
+      title: "Continuer comme ça",
+      body: "Rien à signaler, la routine tient.",
+      tone: "info",
+    });
   }
   return recs;
 }

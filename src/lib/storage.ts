@@ -25,13 +25,24 @@ const initial: ProgressState = {
   chestOpenedOn: [],
 };
 
+// Cache du snapshot : useSyncExternalStore compare les références avec Object.is.
+// read() doit donc renvoyer LE MÊME objet tant que les données n'ont pas changé,
+// sinon React entre dans une boucle infinie ("getSnapshot should be cached").
+let cachedRaw: string | null = null;
+let cachedState: ProgressState = initial;
+
 function read(): ProgressState {
   if (typeof window === "undefined") return initial;
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return initial;
+    if (raw === cachedRaw) return cachedState;
+    cachedRaw = raw;
+    if (!raw) {
+      cachedState = initial;
+      return cachedState;
+    }
     const parsed = JSON.parse(raw) as Partial<ProgressState>;
-    return {
+    cachedState = {
       ...initial,
       ...parsed,
       subjectCounts: { ...initial.subjectCounts, ...(parsed.subjectCounts ?? {}) },
@@ -46,15 +57,18 @@ function read(): ProgressState {
       missions: parsed.missions ?? {},
       chestOpenedOn: parsed.chestOpenedOn ?? [],
     };
+    return cachedState;
   } catch {
-    return initial;
+    return cachedState;
   }
 }
 
 const listeners = new Set<() => void>();
 function subscribe(cb: () => void) {
   listeners.add(cb);
-  const onStorage = (e: StorageEvent) => { if (e.key === KEY) cb(); };
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === KEY) cb();
+  };
   window.addEventListener("storage", onStorage);
   return () => {
     listeners.delete(cb);
@@ -77,20 +91,21 @@ export function updateProgress(fn: (s: ProgressState) => ProgressState) {
 
 export function markDayDone() {
   const iso = isoDate();
-  updateProgress((s) => (s.daysCompleted.includes(iso)
-    ? s
-    : { ...s, daysCompleted: [...s.daysCompleted, iso] }));
+  updateProgress((s) =>
+    s.daysCompleted.includes(iso) ? s : { ...s, daysCompleted: [...s.daysCompleted, iso] },
+  );
 }
 
 export function recordAnswer(subject: Subject, correct: boolean, note?: string) {
   const iso = isoDate();
   updateProgress((s) => ({
     ...s,
-    correctAnswers: { ...s.correctAnswers, [subject]: s.correctAnswers[subject] + (correct ? 1 : 0) },
+    correctAnswers: {
+      ...s.correctAnswers,
+      [subject]: s.correctAnswers[subject] + (correct ? 1 : 0),
+    },
     wrongAnswers: { ...s.wrongAnswers, [subject]: s.wrongAnswers[subject] + (correct ? 0 : 1) },
-    lastNotes: note
-      ? [{ date: iso, subject, note }, ...s.lastNotes].slice(0, 50)
-      : s.lastNotes,
+    lastNotes: note ? [{ date: iso, subject, note }, ...s.lastNotes].slice(0, 50) : s.lastNotes,
   }));
 }
 
@@ -129,7 +144,13 @@ export function awardCoins(amount: number) {
   updateProgress((s) => ({ ...s, coins: s.coins + amount }));
 }
 
-export function celebrate(opts: { title: string; xp: number; coins: number; badge?: string; message?: string }) {
+export function celebrate(opts: {
+  title: string;
+  xp: number;
+  coins: number;
+  badge?: string;
+  message?: string;
+}) {
   awardXP(opts.xp);
   awardCoins(opts.coins);
   emitCelebration({
@@ -157,7 +178,13 @@ export function equipReward(id: string, category: keyof ProgressState["equipped"
   updateProgress((s) => ({ ...s, equipped: { ...s.equipped, [category]: id } }));
 }
 
-export function claimMission(id: string, periodKey: string, xp: number, coins: number, badge?: string) {
+export function claimMission(
+  id: string,
+  periodKey: string,
+  xp: number,
+  coins: number,
+  badge?: string,
+) {
   updateProgress((s) => ({
     ...s,
     missions: { ...s.missions, [id]: { id, periodKey, progress: 0, claimed: true } },
@@ -183,8 +210,13 @@ export function openChest() {
   if (s.chestOpenedOn.includes(iso)) return;
   const reward = Math.random() < 0.15 ? { xp: 100, coins: 100 } : { xp: 30, coins: 40 };
   updateProgress((st) => ({ ...st, chestOpenedOn: [...st.chestOpenedOn, iso] }));
-  celebrate({ title: "Coffre surprise !", xp: reward.xp, coins: reward.coins, badge: "🎁",
-    message: "Ta régularité paie, Bilal !" });
+  celebrate({
+    title: "Coffre surprise !",
+    xp: reward.xp,
+    coins: reward.coins,
+    badge: "🎁",
+    message: "Ta régularité paie, Bilal !",
+  });
 }
 
 export function resetProgress() {

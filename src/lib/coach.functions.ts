@@ -31,32 +31,58 @@ Règles ABSOLUES :
 - Si Bilal semble fatigué, propose une pause.
 - Réponses courtes (5-10 lignes max), sauf demande d'explication détaillée.`;
 
+// Modèle Claude utilisé (surchargeable via la variable d'env CLAUDE_MODEL).
+// Claude Haiku est rapide et économique — idéal pour un tuteur enfant.
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-haiku-4-5-20251001";
+
 export const askCoach = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("LOVABLE_API_KEY missing");
+    const key = process.env.ANTHROPIC_API_KEY;
+    if (!key)
+      throw new Error(
+        "Clé Claude manquante : ajoute ANTHROPIC_API_KEY dans le fichier .env (voir README).",
+      );
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // L'API Claude attend le prompt système dans un champ dédié et une
+    // conversation qui commence par un message "user" (rôles user/assistant).
+    const messages = data.messages.filter((m) => m.role !== "system");
+    while (messages.length > 0 && messages[0].role !== "user") messages.shift();
+
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Lovable-API-Key": key,
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...data.messages],
+        model: CLAUDE_MODEL,
+        max_tokens: 800,
+        temperature: 0.7,
+        system: SYSTEM_PROMPT,
+        messages: messages.map((m) => ({ role: m.role, content: m.content })),
       }),
     });
 
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      if (res.status === 429) throw new Error("Trop de messages, réessaie dans un instant.");
-      if (res.status === 402) throw new Error("Crédits épuisés. Prévenez un parent pour recharger.");
+      if (res.status === 429)
+        throw new Error("Trop de messages d'un coup, réessaie dans un instant.");
+      if (res.status === 401)
+        throw new Error("Clé Claude invalide. Vérifie ANTHROPIC_API_KEY dans le fichier .env.");
+      if (res.status === 400 && body.includes("credit"))
+        throw new Error("Crédit Claude épuisé. Un parent doit recharger le compte Anthropic.");
       throw new Error(`Coach indisponible (${res.status}): ${body.slice(0, 200)}`);
     }
 
-    const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
-    const content = json.choices?.[0]?.message?.content ?? "Je n'ai pas compris, peux-tu reformuler ?";
+    const json = (await res.json()) as {
+      content?: Array<{ type?: string; text?: string }>;
+    };
+    const content =
+      json.content
+        ?.filter((b) => b.type === "text")
+        .map((b) => b.text ?? "")
+        .join("") || "Je n'ai pas compris, peux-tu reformuler ?";
     return { content };
   });

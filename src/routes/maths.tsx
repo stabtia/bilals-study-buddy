@@ -38,7 +38,11 @@ function Maths() {
     if (!input.trim()) return;
     const correct = normalize(input) === normalize(ex.answer);
     setState(correct ? "ok" : "ko");
-    recordAnswer("maths", correct, correct ? undefined : `${ex.category} — difficulté ${difficulty}`);
+    recordAnswer(
+      "maths",
+      correct,
+      correct ? undefined : `${ex.category} — difficulté ${difficulty}`,
+    );
     if (correct) {
       timer.onCorrect();
       awardXP(10);
@@ -46,8 +50,13 @@ function Maths() {
       const s = streak + 1;
       setStreak(s);
       if (s === GOAL) {
-        celebrate({ title: `${GOAL} bonnes réponses d'affilée !`, xp: 40, coins: 20, badge: "🧮",
-          message: "Ta série de maths est impressionnante." });
+        celebrate({
+          title: `${GOAL} bonnes réponses d'affilée !`,
+          xp: 40,
+          coins: 20,
+          badge: "🧮",
+          message: "Ta série de maths est impressionnante.",
+        });
       }
     } else {
       timer.onWrong();
@@ -72,22 +81,35 @@ function Maths() {
   return (
     <AppLayout>
       <header className="pt-2 pb-4">
-        <p className="text-sm font-semibold" style={{ color: "var(--maths)" }}>🧮 Mathématiques</p>
+        <p className="text-sm font-semibold" style={{ color: "var(--maths)" }}>
+          🧮 Mathématiques
+        </p>
         <h1 className="text-3xl font-bold">Un exercice à la fois</h1>
-        <div className="text-xs text-muted-foreground mt-1">Série en cours : {streak} / {GOAL} 🔥</div>
+        <div className="text-xs text-muted-foreground mt-1">
+          Série en cours : {streak} / {GOAL} 🔥
+        </div>
       </header>
 
       <div className="flex gap-2 mb-4">
         {(["facile", "moyen", "difficile"] as Difficulty[]).map((d) => (
           <button
             key={d}
-            onClick={() => { setDifficulty(d); setI(0); setInput(""); setState("idle"); setShowHint(false); setStreak(0); }}
+            onClick={() => {
+              setDifficulty(d);
+              setI(0);
+              setInput("");
+              setState("idle");
+              setShowHint(false);
+              setStreak(0);
+            }}
             className="px-4 py-2 rounded-full text-sm font-semibold capitalize"
             style={{
               background: d === difficulty ? "var(--maths)" : "var(--muted)",
               color: d === difficulty ? "white" : "var(--muted-foreground)",
             }}
-          >{d}</button>
+          >
+            {d}
+          </button>
         ))}
       </div>
 
@@ -105,9 +127,19 @@ function Maths() {
             disabled={state !== "idle"}
           />
           {state === "idle" ? (
-            <button onClick={check} className="btn-big" style={{ background: "var(--maths)", color: "white" }}>Vérifier</button>
+            <button
+              onClick={check}
+              className="btn-big"
+              style={{ background: "var(--maths)", color: "white" }}
+            >
+              Vérifier
+            </button>
           ) : (
-            <button onClick={() => next(state === "ko")} className="btn-big inline-flex items-center gap-2" style={{ background: "var(--primary)", color: "white" }}>
+            <button
+              onClick={() => next(state === "ko")}
+              className="btn-big inline-flex items-center gap-2"
+              style={{ background: "var(--primary)", color: "white" }}
+            >
               <RefreshCw className="w-4 h-4" /> Suivant
             </button>
           )}
@@ -122,38 +154,57 @@ function Maths() {
           </button>
         )}
         {showHint && state === "idle" && (
-          <div className="mt-2 text-sm p-3 rounded-lg" style={{ background: "var(--accent)" }}>💡 {ex.hint}</div>
+          <div className="mt-2 text-sm p-3 rounded-lg" style={{ background: "var(--accent)" }}>
+            💡 {ex.hint}
+          </div>
         )}
 
         {state === "ok" && (
-          <div className="mt-4 p-4 rounded-xl flex gap-3" style={{ background: "color-mix(in oklab, var(--success) 15%, white)" }}>
+          <div
+            className="mt-4 p-4 rounded-xl flex gap-3"
+            style={{ background: "color-mix(in oklab, var(--success) 15%, white)" }}
+          >
             <Check className="w-6 h-6 shrink-0" style={{ color: "var(--success)" }} />
             <div>
-              <div className="font-bold">Bravo, c'est juste ! 🎉 <span className="text-xs font-normal text-muted-foreground">+10 XP · +2 🪙</span></div>
+              <div className="font-bold">
+                Bravo, c'est juste ! 🎉{" "}
+                <span className="text-xs font-normal text-muted-foreground">+10 XP · +2 🪙</span>
+              </div>
               <div className="text-sm mt-1">{ex.explanation}</div>
             </div>
           </div>
         )}
         {state === "ko" && (
-          <div className="mt-4 p-4 rounded-xl flex gap-3" style={{ background: "color-mix(in oklab, var(--destructive) 12%, white)" }}>
+          <div
+            className="mt-4 p-4 rounded-xl flex gap-3"
+            style={{ background: "color-mix(in oklab, var(--destructive) 12%, white)" }}
+          >
             <X className="w-6 h-6 shrink-0" style={{ color: "var(--destructive)" }} />
             <div>
               <div className="font-bold">Pas grave, on regarde ensemble 💪</div>
-              <div className="text-sm mt-1">La bonne réponse était <b>{ex.answer}</b>.</div>
+              <div className="text-sm mt-1">
+                La bonne réponse était <b>{ex.answer}</b>.
+              </div>
               <div className="text-sm mt-1">{ex.explanation}</div>
-              <div className="text-xs text-muted-foreground mt-2">Je te propose un exercice plus simple pour reprendre confiance.</div>
+              <div className="text-xs text-muted-foreground mt-2">
+                Je te propose un exercice plus simple pour reprendre confiance.
+              </div>
             </div>
           </div>
         )}
       </div>
 
       <div className="mt-6">
-        <Mascot mood={state === "ok" ? "cheer" : "happy"}
-          message={state === "ok"
-            ? "Excellent ! Tu vois, tu es capable 💪"
-            : state === "ko"
-            ? "Une erreur, c'est normal. On apprend en essayant."
-            : "Prends ton temps. Lis bien l'énoncé. Tu peux le faire !"} />
+        <Mascot
+          mood={state === "ok" ? "cheer" : "happy"}
+          message={
+            state === "ok"
+              ? "Excellent ! Tu vois, tu es capable 💪"
+              : state === "ko"
+                ? "Une erreur, c'est normal. On apprend en essayant."
+                : "Prends ton temps. Lis bien l'énoncé. Tu peux le faire !"
+          }
+        />
       </div>
     </AppLayout>
   );

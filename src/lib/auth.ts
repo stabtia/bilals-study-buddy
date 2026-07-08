@@ -10,7 +10,9 @@ export interface ParentAuth {
 }
 
 const listeners = new Set<() => void>();
-function emit() { listeners.forEach((l) => l()); }
+function emit() {
+  listeners.forEach((l) => l());
+}
 
 function read(): boolean {
   if (typeof window === "undefined") return false;
@@ -37,9 +39,14 @@ export function useParentMode(): boolean {
   return useSyncExternalStore(
     (cb) => {
       listeners.add(cb);
-      const onStorage = (e: StorageEvent) => { if (e.key === MODE_KEY) cb(); };
+      const onStorage = (e: StorageEvent) => {
+        if (e.key === MODE_KEY) cb();
+      };
       window.addEventListener("storage", onStorage);
-      return () => { listeners.delete(cb); window.removeEventListener("storage", onStorage); };
+      return () => {
+        listeners.delete(cb);
+        window.removeEventListener("storage", onStorage);
+      };
     },
     read,
     () => false,

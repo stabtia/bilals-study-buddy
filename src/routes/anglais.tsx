@@ -39,21 +39,31 @@ function Anglais() {
     answers.forEach((a, i) => {
       const r = a === lesson.quiz[i].answer;
       recordAnswer("anglais", r);
-      if (r) { ok++; timer.onCorrect(); } else timer.onWrong();
+      if (r) {
+        ok++;
+        timer.onCorrect();
+      } else timer.onWrong();
     });
     recordSubjectSession("anglais");
     awardXP(ok * 10);
     awardCoins(ok * 3);
     if (ok === lesson.quiz.length) {
-      celebrate({ title: `Lesson « ${lesson.theme} » done!`, xp: 25, coins: 10, badge: "🇬🇧",
-        message: "Awesome job, Bilal!" });
+      celebrate({
+        title: `Lesson « ${lesson.theme} » done!`,
+        xp: 25,
+        coins: 10,
+        badge: "🇬🇧",
+        message: "Awesome job, Bilal!",
+      });
     }
   }
 
   return (
     <AppLayout>
       <header className="pt-2 pb-4">
-        <p className="text-sm font-semibold" style={{ color: "var(--anglais)" }}>🇬🇧 English confidence</p>
+        <p className="text-sm font-semibold" style={{ color: "var(--anglais)" }}>
+          🇬🇧 English confidence
+        </p>
         <h1 className="text-3xl font-bold">{lesson.theme}</h1>
         <p className="text-sm text-muted-foreground">Tu as super progressé, continue comme ça 🚀</p>
       </header>
@@ -62,9 +72,17 @@ function Anglais() {
         <h3 className="font-bold mb-3">Lis et répète</h3>
         <ul className="grid gap-3">
           {lesson.phrases.map((p, i) => (
-            <li key={i} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "color-mix(in oklab, var(--anglais) 12%, white)" }}>
-              <button onClick={() => speak(p.en)} className="w-10 h-10 rounded-full grid place-items-center shrink-0"
-                style={{ background: "var(--anglais)", color: "white" }} aria-label="Écouter">
+            <li
+              key={i}
+              className="flex items-center gap-3 p-3 rounded-xl"
+              style={{ background: "color-mix(in oklab, var(--anglais) 12%, white)" }}
+            >
+              <button
+                onClick={() => speak(p.en)}
+                className="w-10 h-10 rounded-full grid place-items-center shrink-0"
+                style={{ background: "var(--anglais)", color: "white" }}
+                aria-label="Écouter"
+              >
                 <Volume2 className="w-5 h-5" />
               </button>
               <div>
@@ -90,16 +108,30 @@ function Anglais() {
                   return (
                     <button
                       key={k}
-                      onClick={() => !checked && setAnswers((a) => a.map((x, j) => (j === i ? k : x)))}
+                      onClick={() =>
+                        !checked && setAnswers((a) => a.map((x, j) => (j === i ? k : x)))
+                      }
                       disabled={checked}
                       className="text-left px-4 py-3 rounded-xl border-2 font-medium"
                       style={{
-                        borderColor: right ? "var(--success)" : wrong ? "var(--destructive)" : active ? "var(--primary)" : "var(--border)",
-                        background: right ? "color-mix(in oklab, var(--success) 15%, white)"
-                          : wrong ? "color-mix(in oklab, var(--destructive) 10%, white)"
-                          : active ? "color-mix(in oklab, var(--primary) 10%, white)" : "var(--card)",
+                        borderColor: right
+                          ? "var(--success)"
+                          : wrong
+                            ? "var(--destructive)"
+                            : active
+                              ? "var(--primary)"
+                              : "var(--border)",
+                        background: right
+                          ? "color-mix(in oklab, var(--success) 15%, white)"
+                          : wrong
+                            ? "color-mix(in oklab, var(--destructive) 10%, white)"
+                            : active
+                              ? "color-mix(in oklab, var(--primary) 10%, white)"
+                              : "var(--card)",
                       }}
-                    >{c}</button>
+                    >
+                      {c}
+                    </button>
                   );
                 })}
               </div>
@@ -113,9 +145,15 @@ function Anglais() {
             disabled={answers.some((a) => a === null)}
             className="btn-big mt-4 disabled:opacity-50"
             style={{ background: "var(--anglais)", color: "black" }}
-          >Check my answers</button>
+          >
+            Check my answers
+          </button>
         ) : (
-          <button onClick={() => setIdx((n) => n + 1)} className="btn-big mt-4" style={{ background: "var(--primary)", color: "white" }}>
+          <button
+            onClick={() => setIdx((n) => n + 1)}
+            className="btn-big mt-4"
+            style={{ background: "var(--primary)", color: "white" }}
+          >
             Next lesson
           </button>
         )}

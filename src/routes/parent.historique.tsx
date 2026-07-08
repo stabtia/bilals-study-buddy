@@ -42,9 +42,14 @@ function Historique() {
                 return (
                   <tr key={s.id}>
                     <td className="px-4 py-2 text-slate-600">
-                      {new Date(s.startedAt).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}
+                      {new Date(s.startedAt).toLocaleString("fr-FR", {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      })}
                     </td>
-                    <td className="px-4 py-2 text-slate-800">{meta.emoji} {meta.label}</td>
+                    <td className="px-4 py-2 text-slate-800">
+                      {meta.emoji} {meta.label}
+                    </td>
                     <td className="px-4 py-2 text-right">{Math.round(s.durationSec / 60)} min</td>
                     <td className="px-4 py-2 text-right text-green-600">{s.correct}</td>
                     <td className="px-4 py-2 text-right text-red-600">{s.wrong}</td>
@@ -57,8 +62,10 @@ function Historique() {
       </div>
 
       {n < p.sessions.length && (
-        <button onClick={() => setN((x) => x + PAGE)}
-          className="px-4 py-2 rounded-lg border border-slate-300 text-sm">
+        <button
+          onClick={() => setN((x) => x + PAGE)}
+          className="px-4 py-2 rounded-lg border border-slate-300 text-sm"
+        >
           Afficher plus
         </button>
       )}

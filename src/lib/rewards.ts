@@ -1,6 +1,14 @@
 // Catalogue de récompenses cosmétiques (aucune influence sur les exercices).
 
-export type RewardCategory = "avatar" | "accessoire" | "wallpaper" | "frame" | "animation" | "title" | "mascot" | "winSound";
+export type RewardCategory =
+  | "avatar"
+  | "accessoire"
+  | "wallpaper"
+  | "frame"
+  | "animation"
+  | "title"
+  | "mascot"
+  | "winSound";
 
 export interface Reward {
   id: string;
@@ -13,15 +21,50 @@ export interface Reward {
 
 export const catalog: Reward[] = [
   // Avatars
-  { id: "av-fox", category: "avatar", name: "Renard rusé", emoji: "🦊", price: 0, rarity: "common" },
+  {
+    id: "av-fox",
+    category: "avatar",
+    name: "Renard rusé",
+    emoji: "🦊",
+    price: 0,
+    rarity: "common",
+  },
   { id: "av-panda", category: "avatar", name: "Panda zen", emoji: "🐼", price: 40 },
-  { id: "av-dragon", category: "avatar", name: "Dragon flamme", emoji: "🐲", price: 120, rarity: "rare" },
-  { id: "av-astro", category: "avatar", name: "Astronaute", emoji: "🧑‍🚀", price: 200, rarity: "rare" },
-  { id: "av-wizard", category: "avatar", name: "Magicien", emoji: "🧙", price: 300, rarity: "legendary" },
+  {
+    id: "av-dragon",
+    category: "avatar",
+    name: "Dragon flamme",
+    emoji: "🐲",
+    price: 120,
+    rarity: "rare",
+  },
+  {
+    id: "av-astro",
+    category: "avatar",
+    name: "Astronaute",
+    emoji: "🧑‍🚀",
+    price: 200,
+    rarity: "rare",
+  },
+  {
+    id: "av-wizard",
+    category: "avatar",
+    name: "Magicien",
+    emoji: "🧙",
+    price: 300,
+    rarity: "legendary",
+  },
   { id: "av-ninja", category: "avatar", name: "Ninja", emoji: "🥷", price: 250, rarity: "rare" },
 
   // Accessoires
-  { id: "ac-crown", category: "accessoire", name: "Couronne d'or", emoji: "👑", price: 150, rarity: "rare" },
+  {
+    id: "ac-crown",
+    category: "accessoire",
+    name: "Couronne d'or",
+    emoji: "👑",
+    price: 150,
+    rarity: "rare",
+  },
   { id: "ac-glasses", category: "accessoire", name: "Lunettes cool", emoji: "🕶️", price: 60 },
   { id: "ac-cap", category: "accessoire", name: "Casquette", emoji: "🧢", price: 40 },
 
@@ -33,19 +76,47 @@ export const catalog: Reward[] = [
   // Cadres
   { id: "fr-gold", category: "frame", name: "Cadre or", emoji: "🟨", price: 120, rarity: "rare" },
   { id: "fr-neon", category: "frame", name: "Cadre néon", emoji: "🟪", price: 90 },
-  { id: "fr-fire", category: "frame", name: "Cadre flammes", emoji: "🔥", price: 200, rarity: "legendary" },
+  {
+    id: "fr-fire",
+    category: "frame",
+    name: "Cadre flammes",
+    emoji: "🔥",
+    price: 200,
+    rarity: "legendary",
+  },
 
   // Animations
   { id: "an-sparkle", category: "animation", name: "Étincelles", emoji: "✨", price: 70 },
   { id: "an-confetti", category: "animation", name: "Pluie de confettis", emoji: "🎊", price: 130 },
 
   // Titres
-  { id: "ti-legend", category: "title", name: "Titre : Légende du calcul", emoji: "🏆", price: 180, rarity: "rare" },
+  {
+    id: "ti-legend",
+    category: "title",
+    name: "Titre : Légende du calcul",
+    emoji: "🏆",
+    price: 180,
+    rarity: "rare",
+  },
   { id: "ti-explorer", category: "title", name: "Titre : Explorateur", emoji: "🧭", price: 90 },
-  { id: "ti-roblox", category: "title", name: "Titre : Roblox Master", emoji: "🎮", price: 250, rarity: "rare" },
+  {
+    id: "ti-roblox",
+    category: "title",
+    name: "Titre : Roblox Master",
+    emoji: "🎮",
+    price: 250,
+    rarity: "rare",
+  },
 
   // Mascottes
-  { id: "ma-owl", category: "mascot", name: "Chouette savante", emoji: "🦉", price: 160, rarity: "rare" },
+  {
+    id: "ma-owl",
+    category: "mascot",
+    name: "Chouette savante",
+    emoji: "🦉",
+    price: 160,
+    rarity: "rare",
+  },
   { id: "ma-cat", category: "mascot", name: "Chat porte-bonheur", emoji: "🐱", price: 80 },
 
   // Sons de victoire

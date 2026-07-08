@@ -25,11 +25,17 @@ export function ParentLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center gap-4">
-          <Link to="/" className="text-sm text-slate-500 hover:text-slate-800 inline-flex items-center gap-1">
+          <Link
+            to="/"
+            className="text-sm text-slate-500 hover:text-slate-800 inline-flex items-center gap-1"
+          >
             <ArrowLeft className="w-4 h-4" /> App
           </Link>
           <div className="font-semibold text-slate-800">Espace parents · Bilal</div>
-          <button onClick={signOut} className="ml-auto text-sm text-slate-500 hover:text-slate-800 inline-flex items-center gap-1">
+          <button
+            onClick={signOut}
+            className="ml-auto text-sm text-slate-500 hover:text-slate-800 inline-flex items-center gap-1"
+          >
             <LogOut className="w-4 h-4" /> Déconnexion
           </button>
         </div>

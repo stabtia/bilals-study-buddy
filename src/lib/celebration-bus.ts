@@ -25,7 +25,10 @@ export function clearCelebration() {
 
 export function useCelebration() {
   return useSyncExternalStore(
-    (cb) => { listeners.add(cb); return () => listeners.delete(cb); },
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
     () => current,
     () => null,
   );

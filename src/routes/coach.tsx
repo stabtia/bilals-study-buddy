@@ -15,14 +15,20 @@ type Msg = { role: "user" | "assistant"; content: string };
 function Coach() {
   const ask = useServerFn(askCoach);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Salut Bilal 🦊 Je suis ton coach ! Dis-moi ce que tu ne comprends pas, ou demande-moi un exercice. Je suis là pour t'aider !" },
+    {
+      role: "assistant",
+      content:
+        "Salut Bilal 🦊 Je suis ton coach ! Dis-moi ce que tu ne comprends pas, ou demande-moi un exercice. Je suis là pour t'aider !",
+    },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   async function send() {
     const text = input.trim();
@@ -66,7 +72,9 @@ function Coach() {
                   background: m.role === "user" ? "var(--primary)" : "var(--secondary)",
                   color: m.role === "user" ? "white" : "var(--foreground)",
                 }}
-              >{m.content}</div>
+              >
+                {m.content}
+              </div>
             </div>
           ))}
           {loading && (
@@ -81,8 +89,11 @@ function Coach() {
         {messages.length <= 1 && (
           <div className="flex flex-wrap gap-2">
             {suggestions.map((s) => (
-              <button key={s} onClick={() => setInput(s)}
-                className="text-xs px-3 py-1.5 rounded-full border border-input bg-background hover:bg-muted">
+              <button
+                key={s}
+                onClick={() => setInput(s)}
+                className="text-xs px-3 py-1.5 rounded-full border border-input bg-background hover:bg-muted"
+              >
                 {s}
               </button>
             ))}
@@ -98,9 +109,12 @@ function Coach() {
             className="flex-1 px-4 py-3 rounded-xl border-2 border-input bg-background focus:outline-none focus:border-primary"
             disabled={loading}
           />
-          <button onClick={send} disabled={loading || !input.trim()}
+          <button
+            onClick={send}
+            disabled={loading || !input.trim()}
             className="btn-big inline-flex items-center gap-1 disabled:opacity-50"
-            style={{ background: "var(--primary)", color: "white" }}>
+            style={{ background: "var(--primary)", color: "white" }}
+          >
             <Send className="w-4 h-4" />
           </button>
         </div>

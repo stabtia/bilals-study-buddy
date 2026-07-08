@@ -22,8 +22,10 @@ function ParentLogin() {
       <div className="min-h-screen bg-slate-50 grid place-items-center px-4">
         <div className="bg-white rounded-xl border border-slate-200 p-6 max-w-sm w-full text-center">
           <p className="text-slate-700">Vous êtes déjà connecté.</p>
-          <button onClick={() => router.navigate({ to: "/parent" })}
-            className="mt-4 w-full py-2.5 rounded-lg bg-slate-900 text-white font-semibold">
+          <button
+            onClick={() => router.navigate({ to: "/parent" })}
+            className="mt-4 w-full py-2.5 rounded-lg bg-slate-900 text-white font-semibold"
+          >
             Aller au tableau de bord
           </button>
         </div>
@@ -65,19 +67,27 @@ function ParentLogin() {
             type="password"
             inputMode="numeric"
             value={pin}
-            onChange={(e) => { setPin(e.target.value); setError(false); }}
+            onChange={(e) => {
+              setPin(e.target.value);
+              setError(false);
+            }}
             placeholder="Code parent"
             className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-slate-900 focus:outline-none"
             autoFocus
           />
           {error && <div className="text-sm text-red-600">Code incorrect.</div>}
-          <button type="submit" className="w-full py-2.5 rounded-lg bg-slate-900 text-white font-semibold hover:bg-slate-800">
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-lg bg-slate-900 text-white font-semibold hover:bg-slate-800"
+          >
             Se connecter
           </button>
         </form>
 
         <div className="mt-5 text-xs text-slate-500">
-          <div>Code par défaut : <b>1234</b> (à changer)</div>
+          <div>
+            Code par défaut : <b>1234</b> (à changer)
+          </div>
           <button onClick={() => setChanging((c) => !c)} className="underline mt-1">
             {changing ? "Annuler" : "Modifier le code"}
           </button>

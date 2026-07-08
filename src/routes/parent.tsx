@@ -5,7 +5,9 @@ import { useRouterState } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/parent")({
   component: ParentShell,
-  head: () => ({ meta: [{ title: "Espace parents — Coach Bilal" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({
+    meta: [{ title: "Espace parents — Coach Bilal" }, { name: "robots", content: "noindex" }],
+  }),
 });
 
 function ParentShell() {

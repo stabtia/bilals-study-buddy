@@ -1,4 +1,3 @@
-
 # Plan — Espace Parent + Gamification
 
 Périmètre volontairement livré en **v1 locale** (localStorage), architecturée pour un branchement Supabase ultérieur sans refonte. L'expérience enfant actuelle reste intacte : ajouts additifs (célébration, XP, pièces) via un module gamification opt-in appelé depuis les modules existants.
@@ -14,6 +13,7 @@ Périmètre volontairement livré en **v1 locale** (localStorage), architecturé
 ## 2. Tableau de bord Parent (`/parent`)
 
 Sections :
+
 - Vue d'ensemble : streak, jours travaillés semaine, XP total, niveau, pièces.
 - Statistiques par matière (déjà existant, enrichi avec temps passé + taux réussite).
 - Temps passé jour/semaine (graphique barres, recharts déjà dispo ou simple SVG maison).
@@ -23,6 +23,7 @@ Sections :
 - Recommandations personnalisées (règles simples selon ratios erreurs/matière).
 
 Sous-pages :
+
 - `/parent/objectifs` : définir objectif hebdo (exos, minutes, niveaux).
 - `/parent/notifications` : toggles (rappels quotidiens, résumé hebdo) — stockés localement.
 - `/parent/rapport` : export PDF via `jspdf` (bundle safe côté client).
@@ -31,6 +32,7 @@ Sous-pages :
 ## 3. Tracking étendu
 
 Extension de `ProgressState` (migration douce, valeurs par défaut) :
+
 - `xp`, `coins`, `level`
 - `sessions: { date, subject, durationSec, correct, wrong }[]`
 - `dailyTime: Record<isoDate, seconds>`
@@ -45,6 +47,7 @@ Helpers dans `storage.ts` : `startSession/endSession`, `awardXP`, `awardCoins`, 
 ## 4. Écran de célébration (enfant)
 
 Composant `<Celebration/>` monté en portail depuis les modules maths/français/etc. quand un parcours/niveau se termine :
+
 - Confettis (canvas-confetti, package léger).
 - Son victoire (WebAudio simple, togglable via prefs enfant).
 - Message perso : "Bravo Bilal 🎉"
