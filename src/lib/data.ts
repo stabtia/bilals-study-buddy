@@ -1,4 +1,4 @@
-// Données d'exemple: exercices, planning, badges
+// Données d'exemple: exercices, planning, badges, récompenses, missions
 
 export type Subject = "maths" | "francais" | "sciences" | "anglais";
 
@@ -190,12 +190,47 @@ export interface Badge {
   check: (s: ProgressState) => boolean;
 }
 
+export interface SessionLog {
+  id: string;
+  date: string; // ISO date
+  startedAt: number; // epoch ms
+  durationSec: number;
+  subject: Subject;
+  correct: number;
+  wrong: number;
+}
+
+export interface MissionProgress {
+  id: string;
+  progress: number;
+  claimed: boolean;
+  periodKey: string; // YYYY-MM-DD or YYYY-Www or YYYY-MM
+}
+
+export interface WeeklyGoal {
+  exercises: number;
+  minutes: number;
+}
+
 export interface ProgressState {
   daysCompleted: string[]; // ISO dates (YYYY-MM-DD)
   subjectCounts: Record<Subject, number>;
   correctAnswers: Record<Subject, number>;
   wrongAnswers: Record<Subject, number>;
   lastNotes: { date: string; subject: Subject; note: string }[];
+  // Gamification
+  xp: number;
+  coins: number;
+  level: number;
+  sessions: SessionLog[];
+  dailyTime: Record<string, number>; // isoDate -> seconds
+  weeklyGoal: WeeklyGoal;
+  unlockedRewards: string[];
+  equipped: { avatar?: string; frame?: string; wallpaper?: string; title?: string; mascot?: string; winSound?: string };
+  missions: Record<string, MissionProgress>;
+  notifications: { dailyReminder: boolean; weeklyDigest: boolean; soundEnabled: boolean };
+  parentPin: string;
+  chestOpenedOn: string[]; // ISO dates chest was opened
 }
 
 export const badges: Badge[] = [
@@ -214,6 +249,12 @@ export const badges: Badge[] = [
   { id: "english", label: "Progression en anglais", emoji: "🚀",
     description: "3 sessions d'anglais",
     check: (s) => (s.subjectCounts.anglais ?? 0) >= 3 },
+  { id: "level5", label: "Niveau 5", emoji: "⭐",
+    description: "Atteindre le niveau 5",
+    check: (s) => (s.level ?? 1) >= 5 },
+  { id: "coins100", label: "Petit trésor", emoji: "💰",
+    description: "Amasser 100 pièces",
+    check: (s) => (s.coins ?? 0) >= 100 },
 ];
 
 export function currentStreak(days: string[]): number {

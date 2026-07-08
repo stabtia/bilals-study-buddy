@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Mascot } from "@/components/Mascot";
 import { readings } from "@/lib/data";
-import { recordAnswer, recordSubjectSession } from "@/lib/storage";
+import { recordAnswer, recordSubjectSession, awardXP, awardCoins, celebrate } from "@/lib/storage";
+import { useSessionTimer } from "@/hooks/useSessionTimer";
 import { useMemo, useState } from "react";
 import { Check } from "lucide-react";
 
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/francais")({
 });
 
 function Francais() {
+  const timer = useSessionTimer("francais");
   const [idx, setIdx] = useState(0);
   const reading = readings[idx % readings.length];
   const [answers, setAnswers] = useState<string[]>(() => reading.questions.map(() => ""));
@@ -27,13 +29,23 @@ function Francais() {
 
   function submit() {
     setChecked(true);
-    reading.questions.forEach((_, i) => recordAnswer("francais", !!results[i]));
+    let ok = 0;
+    reading.questions.forEach((_, i) => {
+      const r = !!results[i];
+      recordAnswer("francais", r);
+      if (r) { ok++; timer.onCorrect(); } else timer.onWrong();
+    });
     recordSubjectSession("francais");
+    awardXP(ok * 8);
+    awardCoins(ok * 2);
   }
 
   function finish() {
     setDone(true);
-    // conseils simples selon la longueur
+    const lc = writing.split(/\n/).filter((l) => l.trim().length > 0).length;
+    const bonus = lc >= 5 ? 30 : 15;
+    celebrate({ title: "Lecture & écriture terminées !", xp: 30 + bonus, coins: 15, badge: "📖",
+      message: "Tu progresses en français, Bilal !" });
   }
 
   function reset() {
@@ -42,6 +54,7 @@ function Francais() {
     setChecked(false);
     setWriting("");
     setDone(false);
+    timer.flush();
   }
 
   const wc = writing.trim().split(/\s+/).filter(Boolean).length;

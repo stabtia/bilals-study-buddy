@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Mascot } from "@/components/Mascot";
 import { englishLessons } from "@/lib/data";
-import { recordAnswer, recordSubjectSession } from "@/lib/storage";
+import { recordAnswer, recordSubjectSession, awardXP, awardCoins, celebrate } from "@/lib/storage";
+import { useSessionTimer } from "@/hooks/useSessionTimer";
 import { useEffect, useState } from "react";
 import { Volume2 } from "lucide-react";
 
@@ -21,6 +22,7 @@ function speak(text: string) {
 }
 
 function Anglais() {
+  const timer = useSessionTimer("anglais");
   const [idx, setIdx] = useState(0);
   const lesson = englishLessons[idx % englishLessons.length];
   const [answers, setAnswers] = useState<(number | null)[]>(() => lesson.quiz.map(() => null));
@@ -33,8 +35,19 @@ function Anglais() {
 
   function submit() {
     setChecked(true);
-    answers.forEach((a, i) => recordAnswer("anglais", a === lesson.quiz[i].answer));
+    let ok = 0;
+    answers.forEach((a, i) => {
+      const r = a === lesson.quiz[i].answer;
+      recordAnswer("anglais", r);
+      if (r) { ok++; timer.onCorrect(); } else timer.onWrong();
+    });
     recordSubjectSession("anglais");
+    awardXP(ok * 10);
+    awardCoins(ok * 3);
+    if (ok === lesson.quiz.length) {
+      celebrate({ title: `Lesson « ${lesson.theme} » done!`, xp: 25, coins: 10, badge: "🇬🇧",
+        message: "Awesome job, Bilal!" });
+    }
   }
 
   return (

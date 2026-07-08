@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Mascot } from "@/components/Mascot";
 import { mathExercises, type Difficulty } from "@/lib/data";
-import { recordAnswer, recordSubjectSession } from "@/lib/storage";
+import { recordAnswer, recordSubjectSession, awardXP, awardCoins, celebrate } from "@/lib/storage";
+import { useSessionTimer } from "@/hooks/useSessionTimer";
 import { useMemo, useState } from "react";
 import { Check, X, RefreshCw, Lightbulb } from "lucide-react";
 
@@ -15,13 +16,17 @@ function normalize(s: string) {
   return s.trim().toLowerCase().replace(",", ".").replace(/\s+/g, "").replace("€", "");
 }
 
+const GOAL = 5;
+
 function Maths() {
+  const timer = useSessionTimer("maths");
   const [difficulty, setDifficulty] = useState<Difficulty>("facile");
   const [i, setI] = useState(0);
   const [input, setInput] = useState("");
   const [state, setState] = useState<"idle" | "ok" | "ko">("idle");
   const [showHint, setShowHint] = useState(false);
   const [sessionCounted, setSessionCounted] = useState(false);
+  const [streak, setStreak] = useState(0);
 
   const pool = useMemo(
     () => mathExercises.filter((e) => e.difficulty === difficulty),
@@ -34,6 +39,20 @@ function Maths() {
     const correct = normalize(input) === normalize(ex.answer);
     setState(correct ? "ok" : "ko");
     recordAnswer("maths", correct, correct ? undefined : `${ex.category} — difficulté ${difficulty}`);
+    if (correct) {
+      timer.onCorrect();
+      awardXP(10);
+      awardCoins(2);
+      const s = streak + 1;
+      setStreak(s);
+      if (s === GOAL) {
+        celebrate({ title: `${GOAL} bonnes réponses d'affilée !`, xp: 40, coins: 20, badge: "🧮",
+          message: "Ta série de maths est impressionnante." });
+      }
+    } else {
+      timer.onWrong();
+      setStreak(0);
+    }
     if (!sessionCounted) {
       recordSubjectSession("maths");
       setSessionCounted(true);
@@ -55,13 +74,14 @@ function Maths() {
       <header className="pt-2 pb-4">
         <p className="text-sm font-semibold" style={{ color: "var(--maths)" }}>🧮 Mathématiques</p>
         <h1 className="text-3xl font-bold">Un exercice à la fois</h1>
+        <div className="text-xs text-muted-foreground mt-1">Série en cours : {streak} / {GOAL} 🔥</div>
       </header>
 
       <div className="flex gap-2 mb-4">
         {(["facile", "moyen", "difficile"] as Difficulty[]).map((d) => (
           <button
             key={d}
-            onClick={() => { setDifficulty(d); setI(0); setInput(""); setState("idle"); setShowHint(false); }}
+            onClick={() => { setDifficulty(d); setI(0); setInput(""); setState("idle"); setShowHint(false); setStreak(0); }}
             className="px-4 py-2 rounded-full text-sm font-semibold capitalize"
             style={{
               background: d === difficulty ? "var(--maths)" : "var(--muted)",
@@ -109,7 +129,7 @@ function Maths() {
           <div className="mt-4 p-4 rounded-xl flex gap-3" style={{ background: "color-mix(in oklab, var(--success) 15%, white)" }}>
             <Check className="w-6 h-6 shrink-0" style={{ color: "var(--success)" }} />
             <div>
-              <div className="font-bold">Bravo, c'est juste ! 🎉</div>
+              <div className="font-bold">Bravo, c'est juste ! 🎉 <span className="text-xs font-normal text-muted-foreground">+10 XP · +2 🪙</span></div>
               <div className="text-sm mt-1">{ex.explanation}</div>
             </div>
           </div>

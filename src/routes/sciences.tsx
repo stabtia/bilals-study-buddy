@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Mascot } from "@/components/Mascot";
 import { sciences } from "@/lib/data";
-import { recordAnswer, recordSubjectSession } from "@/lib/storage";
+import { recordAnswer, recordSubjectSession, awardXP, awardCoins, celebrate } from "@/lib/storage";
+import { useSessionTimer } from "@/hooks/useSessionTimer";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/sciences")({
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/sciences")({
 });
 
 function Sciences() {
+  const timer = useSessionTimer("sciences");
   const [idx, setIdx] = useState(0);
   const fact = sciences[idx % sciences.length];
   const [answers, setAnswers] = useState<(number | null)[]>(() => fact.quiz.map(() => null));
@@ -23,8 +25,19 @@ function Sciences() {
 
   function submit() {
     setChecked(true);
-    answers.forEach((a, i) => recordAnswer("sciences", a === fact.quiz[i].answer));
+    let ok = 0;
+    answers.forEach((a, i) => {
+      const r = a === fact.quiz[i].answer;
+      recordAnswer("sciences", r);
+      if (r) { ok++; timer.onCorrect(); } else timer.onWrong();
+    });
     recordSubjectSession("sciences");
+    awardXP(ok * 10);
+    awardCoins(ok * 3);
+    if (ok === fact.quiz.length) {
+      celebrate({ title: `Fiche « ${fact.title} » maîtrisée !`, xp: 25, coins: 10, badge: "🔬",
+        message: "Toutes les bonnes réponses !" });
+    }
   }
 
   return (

@@ -11,12 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SciencesRouteImport } from './routes/sciences'
 import { Route as ParentRouteImport } from './routes/parent'
+import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MathsRouteImport } from './routes/maths'
 import { Route as FrancaisRouteImport } from './routes/francais'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoachRouteImport } from './routes/coach'
+import { Route as BoutiqueRouteImport } from './routes/boutique'
 import { Route as AnglaisRouteImport } from './routes/anglais'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ParentIndexRouteImport } from './routes/parent.index'
+import { Route as ParentRapportRouteImport } from './routes/parent.rapport'
+import { Route as ParentObjectifsRouteImport } from './routes/parent.objectifs'
+import { Route as ParentNotificationsRouteImport } from './routes/parent.notifications'
+import { Route as ParentLoginRouteImport } from './routes/parent.login'
+import { Route as ParentHistoriqueRouteImport } from './routes/parent.historique'
 
 const SciencesRoute = SciencesRouteImport.update({
   id: '/sciences',
@@ -26,6 +34,11 @@ const SciencesRoute = SciencesRouteImport.update({
 const ParentRoute = ParentRouteImport.update({
   id: '/parent',
   path: '/parent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionsRoute = MissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MathsRoute = MathsRouteImport.update({
@@ -48,6 +61,11 @@ const CoachRoute = CoachRouteImport.update({
   path: '/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BoutiqueRoute = BoutiqueRouteImport.update({
+  id: '/boutique',
+  path: '/boutique',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnglaisRoute = AnglaisRouteImport.update({
   id: '/anglais',
   path: '/anglais',
@@ -58,79 +76,157 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParentIndexRoute = ParentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentRapportRoute = ParentRapportRouteImport.update({
+  id: '/rapport',
+  path: '/rapport',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentObjectifsRoute = ParentObjectifsRouteImport.update({
+  id: '/objectifs',
+  path: '/objectifs',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentNotificationsRoute = ParentNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentLoginRoute = ParentLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentHistoriqueRoute = ParentHistoriqueRouteImport.update({
+  id: '/historique',
+  path: '/historique',
+  getParentRoute: () => ParentRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anglais': typeof AnglaisRoute
+  '/boutique': typeof BoutiqueRoute
   '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
-  '/parent': typeof ParentRoute
+  '/missions': typeof MissionsRoute
+  '/parent': typeof ParentRouteWithChildren
   '/sciences': typeof SciencesRoute
+  '/parent/historique': typeof ParentHistoriqueRoute
+  '/parent/login': typeof ParentLoginRoute
+  '/parent/notifications': typeof ParentNotificationsRoute
+  '/parent/objectifs': typeof ParentObjectifsRoute
+  '/parent/rapport': typeof ParentRapportRoute
+  '/parent/': typeof ParentIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anglais': typeof AnglaisRoute
+  '/boutique': typeof BoutiqueRoute
   '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
-  '/parent': typeof ParentRoute
+  '/missions': typeof MissionsRoute
   '/sciences': typeof SciencesRoute
+  '/parent/historique': typeof ParentHistoriqueRoute
+  '/parent/login': typeof ParentLoginRoute
+  '/parent/notifications': typeof ParentNotificationsRoute
+  '/parent/objectifs': typeof ParentObjectifsRoute
+  '/parent/rapport': typeof ParentRapportRoute
+  '/parent': typeof ParentIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/anglais': typeof AnglaisRoute
+  '/boutique': typeof BoutiqueRoute
   '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRoute
   '/francais': typeof FrancaisRoute
   '/maths': typeof MathsRoute
-  '/parent': typeof ParentRoute
+  '/missions': typeof MissionsRoute
+  '/parent': typeof ParentRouteWithChildren
   '/sciences': typeof SciencesRoute
+  '/parent/historique': typeof ParentHistoriqueRoute
+  '/parent/login': typeof ParentLoginRoute
+  '/parent/notifications': typeof ParentNotificationsRoute
+  '/parent/objectifs': typeof ParentObjectifsRoute
+  '/parent/rapport': typeof ParentRapportRoute
+  '/parent/': typeof ParentIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/anglais'
+    | '/boutique'
     | '/coach'
     | '/dashboard'
     | '/francais'
     | '/maths'
+    | '/missions'
     | '/parent'
     | '/sciences'
+    | '/parent/historique'
+    | '/parent/login'
+    | '/parent/notifications'
+    | '/parent/objectifs'
+    | '/parent/rapport'
+    | '/parent/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/anglais'
+    | '/boutique'
     | '/coach'
     | '/dashboard'
     | '/francais'
     | '/maths'
-    | '/parent'
+    | '/missions'
     | '/sciences'
+    | '/parent/historique'
+    | '/parent/login'
+    | '/parent/notifications'
+    | '/parent/objectifs'
+    | '/parent/rapport'
+    | '/parent'
   id:
     | '__root__'
     | '/'
     | '/anglais'
+    | '/boutique'
     | '/coach'
     | '/dashboard'
     | '/francais'
     | '/maths'
+    | '/missions'
     | '/parent'
     | '/sciences'
+    | '/parent/historique'
+    | '/parent/login'
+    | '/parent/notifications'
+    | '/parent/objectifs'
+    | '/parent/rapport'
+    | '/parent/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnglaisRoute: typeof AnglaisRoute
+  BoutiqueRoute: typeof BoutiqueRoute
   CoachRoute: typeof CoachRoute
   DashboardRoute: typeof DashboardRoute
   FrancaisRoute: typeof FrancaisRoute
   MathsRoute: typeof MathsRoute
-  ParentRoute: typeof ParentRoute
+  MissionsRoute: typeof MissionsRoute
+  ParentRoute: typeof ParentRouteWithChildren
   SciencesRoute: typeof SciencesRoute
 }
 
@@ -148,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/parent'
       fullPath: '/parent'
       preLoaderRoute: typeof ParentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/missions': {
+      id: '/missions'
+      path: '/missions'
+      fullPath: '/missions'
+      preLoaderRoute: typeof MissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/maths': {
@@ -178,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoachRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/boutique': {
+      id: '/boutique'
+      path: '/boutique'
+      fullPath: '/boutique'
+      preLoaderRoute: typeof BoutiqueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/anglais': {
       id: '/anglais'
       path: '/anglais'
@@ -192,29 +302,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parent/': {
+      id: '/parent/'
+      path: '/'
+      fullPath: '/parent/'
+      preLoaderRoute: typeof ParentIndexRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/rapport': {
+      id: '/parent/rapport'
+      path: '/rapport'
+      fullPath: '/parent/rapport'
+      preLoaderRoute: typeof ParentRapportRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/objectifs': {
+      id: '/parent/objectifs'
+      path: '/objectifs'
+      fullPath: '/parent/objectifs'
+      preLoaderRoute: typeof ParentObjectifsRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/notifications': {
+      id: '/parent/notifications'
+      path: '/notifications'
+      fullPath: '/parent/notifications'
+      preLoaderRoute: typeof ParentNotificationsRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/login': {
+      id: '/parent/login'
+      path: '/login'
+      fullPath: '/parent/login'
+      preLoaderRoute: typeof ParentLoginRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/historique': {
+      id: '/parent/historique'
+      path: '/historique'
+      fullPath: '/parent/historique'
+      preLoaderRoute: typeof ParentHistoriqueRouteImport
+      parentRoute: typeof ParentRoute
+    }
   }
 }
+
+interface ParentRouteChildren {
+  ParentHistoriqueRoute: typeof ParentHistoriqueRoute
+  ParentLoginRoute: typeof ParentLoginRoute
+  ParentNotificationsRoute: typeof ParentNotificationsRoute
+  ParentObjectifsRoute: typeof ParentObjectifsRoute
+  ParentRapportRoute: typeof ParentRapportRoute
+  ParentIndexRoute: typeof ParentIndexRoute
+}
+
+const ParentRouteChildren: ParentRouteChildren = {
+  ParentHistoriqueRoute: ParentHistoriqueRoute,
+  ParentLoginRoute: ParentLoginRoute,
+  ParentNotificationsRoute: ParentNotificationsRoute,
+  ParentObjectifsRoute: ParentObjectifsRoute,
+  ParentRapportRoute: ParentRapportRoute,
+  ParentIndexRoute: ParentIndexRoute,
+}
+
+const ParentRouteWithChildren =
+  ParentRoute._addFileChildren(ParentRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnglaisRoute: AnglaisRoute,
+  BoutiqueRoute: BoutiqueRoute,
   CoachRoute: CoachRoute,
   DashboardRoute: DashboardRoute,
   FrancaisRoute: FrancaisRoute,
   MathsRoute: MathsRoute,
-  ParentRoute: ParentRoute,
+  MissionsRoute: MissionsRoute,
+  ParentRoute: ParentRouteWithChildren,
   SciencesRoute: SciencesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
